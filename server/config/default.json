@@ -1,0 +1,5 @@
+{
+  "mongoURI": "mongodb://localhost:27017/job-connect",
+  "port": 3000,
+  "jwtSecret": "anujnaval13"
+}
