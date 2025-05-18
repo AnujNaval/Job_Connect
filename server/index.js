@@ -1,6 +1,7 @@
 const express = require("express");
 const config = require("config");
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
 const connectDB = require("./config/db");
 const app = express();
 
@@ -18,8 +19,10 @@ app.get("/", (req, res) => {
 // Mount Auth Routes
 app.use("/auth", authRoutes);
 
+// Mount User Routes 
+app.use("/users", userRoutes);
+
 const PORT = config.get('port') || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-}
-);
+});
