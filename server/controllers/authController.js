@@ -12,7 +12,7 @@ const register = async (req, res) => {
         }
 
         // Check if User Already Exists
-        const existingUser = User.findOne({email});
+        const existingUser = await User.findOne({email});
         if(existingUser){
             return res.status(400).json({message: "User already exists with this email!"});
         }
@@ -55,7 +55,7 @@ const register = async (req, res) => {
         console.error('Register error:', error);
         res.status(500).json({ message: 'Server error' });
     }
-}
+};
 
 const login = async(req, res) => {
     try {
@@ -67,13 +67,13 @@ const login = async(req, res) => {
         }
 
         // Check if User with Email Exists
-        const user = User.findOne({email});
+        const user = await User.findOne({email});
         if(!user){
             return res.status(400).json({message: "Invalid email or password!"});
         }
 
         // Compare Password with stored hashed password
-        const isMatch = bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch){
             return res.status(400).json({message: "Invalid email or passord!"});
         }
@@ -105,11 +105,23 @@ const login = async(req, res) => {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Server error' });
     }
-}
+};
 
 const getMe = async(req, res) => {
-
-}
+    try{
+        const user = await User.findById(req.user.id).select("-password");
+        if(!user){
+            return res.status(404).json({message: "User not found!"});
+        }
+        res.status(200).json({
+            message: "User fetched Successfully!",
+            user,
+        });
+    } catch(error){
+        console.error("GetMe error:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 
 module.exports = {
     register,
