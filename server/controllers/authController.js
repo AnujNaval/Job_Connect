@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const config = require("config");
+const jwtSecret = config.get("jwtSecret");
 
 const register = async (req, res) => {
     try {
@@ -18,7 +20,7 @@ const register = async (req, res) => {
         }
 
         // Hash Password
-        const salt = await bcrypt.getSalt(10);
+        const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create New User
@@ -35,7 +37,7 @@ const register = async (req, res) => {
         // Create JWT Token
         const token = jwt.sign(
             {id: user._id, role: user.role},
-            process.env.JWT_SECRET,
+            jwtSecret,
             {expiresIn: "1h"}
         );
 
@@ -86,7 +88,7 @@ const login = async(req, res) => {
         // Generate Token 
         const token = jwt.sign(
             {id: user._id, role: user.role},
-            process.env.JWT_SECRET,
+            jwtSecret,
             {expiresIn: "1h"},
         );
 
