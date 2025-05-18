@@ -42,6 +42,7 @@ const register = async (req, res) => {
         );
 
         // Send Response
+        console.log("Created User: ", user);
         res.status(201).json({
             message: "User Successfully Registered!",
             token,
@@ -93,6 +94,7 @@ const login = async(req, res) => {
         );
 
         // Response 
+        console.log("Logged In User:", user);
         res.status(200).json({
             message: "Login Successful!",
             token,
@@ -115,6 +117,8 @@ const getMe = async(req, res) => {
         if(!user){
             return res.status(404).json({message: "User not found!"});
         }
+
+        console.log("Fetched User: ", user);
         res.status(200).json({
             message: "User fetched Successfully!",
             user,
