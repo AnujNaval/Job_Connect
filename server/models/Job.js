@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 
 const jobSchema = new mongoose.Schema({
+    companyName: {
+        type: String,
+        required: [true, "Plesae provide company name!"],
+        minLength: [3, "Company Name must contain at least 3 Characters!"],
+        maxLength: [30, "Company Name cannot exceed 30 Characters!"],
+    },
     title: {
         type: String,
         required: [true, "Please provide a title."],
