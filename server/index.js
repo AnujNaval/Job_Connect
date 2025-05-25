@@ -17,14 +17,20 @@ app.get("/", (req, res) => {
     res.send("Server is running!");
 })
 
-// Mount Auth Routes
-app.use("/auth", authRoutes);
+// Mount Auth Routes (e.g. /register, /login and /me)
+app.use("/", authRoutes);
 
 // Mount User Routes 
 app.use("/users", userRoutes);
 
 // Mount Job Routes
 app.use("/jobs", jobRoutes);
+
+// Optional: Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: "Something broke!" });
+});
 
 const PORT = config.get('port') || 3000;
 app.listen(PORT, () => {

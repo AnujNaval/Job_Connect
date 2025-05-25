@@ -57,9 +57,6 @@ const createJob = async (req, res) => {
 
 const getAllJobs = async (req, res) => {
     try{
-        if(req.user.role == "Employer"){
-            return res.status(403).json({message: "Employers are not allowed to view jobs of other employer"});
-        }
         const {
             companyName,
             title,
