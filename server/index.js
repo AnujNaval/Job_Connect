@@ -2,6 +2,7 @@ const express = require("express");
 const config = require("config");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
+const jobRoutes = require("./routes/jobs");
 const connectDB = require("./config/db");
 const app = express();
 
@@ -21,6 +22,9 @@ app.use("/auth", authRoutes);
 
 // Mount User Routes 
 app.use("/users", userRoutes);
+
+// Mount Job Routes
+app.use("/jobs", jobRoutes);
 
 const PORT = config.get('port') || 3000;
 app.listen(PORT, () => {
