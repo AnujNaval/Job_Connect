@@ -3,6 +3,7 @@ const config = require("config");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const jobRoutes = require("./routes/jobs");
+const applicationRoutes = require("./routes/applications");
 const connectDB = require("./config/db");
 const app = express();
 
@@ -25,6 +26,9 @@ app.use("/users", userRoutes);
 
 // Mount Job Routes
 app.use("/jobs", jobRoutes);
+
+// Mount Application Routes
+app.use("/applications", applicationRoutes);
 
 // Optional: Error handling middleware
 app.use((err, req, res, next) => {

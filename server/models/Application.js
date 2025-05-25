@@ -12,7 +12,7 @@ const applicationSchema = new mongoose.Schema({
         required: [true, "Please enter your Email!"],
     },
     phone: {
-        type: Number,
+        type: String,
         required: [true, "Please enter your Phone Number!"],
     },
     address: {
@@ -25,32 +25,24 @@ const applicationSchema = new mongoose.Schema({
     },
     resume: {
         type: String,
+        required: true,
     },
-    applicantID: {
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-        },
-        role: {
-            type: String,
-            enum: ["Job Seeker"],
-            required: true,
-        },
+    job: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Job",
+        required: true,
     },
-    employerID: {
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-        },
-        role: {
-            type: String,
-            enum: ["Employer"],
-            required: true,
-        },
+    applicationStatus: {
+        type: String,
+        enum: ["Pending", "Reviewed", "Accepted", "Rejected"],
+        default: "Pending",
     },
-});
+    applicant: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    }
+}, { timestamps: true });
 
 const Application = mongoose.model("Application", applicationSchema);
 module.exports = Application;
