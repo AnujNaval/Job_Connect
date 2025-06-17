@@ -1,0 +1,231 @@
+/* Modern Navbar Styling */
+.navbar {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%) !important;
+  box-shadow: 0 2px 25px rgba(79, 70, 229, 0.15);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(147, 197, 253, 0.2);
+  transition: all 0.3s ease;
+  padding: 0.8rem 0;
+}
+
+/* Glassmorphism effect on scroll */
+.navbar.scrolled {
+  background: rgba(79, 70, 229, 0.9) !important;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 30px rgba(79, 70, 229, 0.2);
+}
+
+/* Brand styling */
+.navbar-brand {
+  font-weight: 700 !important;
+  font-size: 1.6rem !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navbar-brand::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #60a5fa 0%, #a78bfa 100%);
+  transition: width 0.3s ease;
+}
+
+.navbar-brand:hover::after {
+  width: 100%;
+}
+
+.navbar-brand:hover {
+  color: #93c5fd !important;
+  transform: translateY(-2px);
+}
+
+/* Navigation links */
+.navbar-nav .nav-link {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  padding: 0.6rem 1rem !important;
+  margin: 0 0.2rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  text-decoration: none !important;
+}
+
+.navbar-nav .nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(147, 197, 253, 0.15);
+  border-radius: 8px;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::before {
+  transform: scaleX(1);
+}
+
+.navbar-nav .nav-link:hover {
+  color: #93c5fd !important;
+  transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link:active,
+.navbar-nav .nav-link.active {
+  background: rgba(147, 197, 253, 0.2) !important;
+  color: #60a5fa !important;
+}
+
+/* Navbar toggler (hamburger menu) */
+.navbar-toggler {
+  border: none !important;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(147, 197, 253, 0.4) !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28147, 197, 253, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  background: rgba(147, 197, 253, 0.15);
+  transform: scale(1.05);
+}
+
+/* Container adjustments */
+.navbar .container {
+  position: relative;
+}
+
+/* Responsive behavior for mobile */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background: rgba(79, 70, 229, 0.95);
+    backdrop-filter: blur(20px);
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(147, 197, 253, 0.2);
+    box-shadow: 0 8px 32px rgba(79, 70, 229, 0.25);
+  }
+  
+  .navbar-nav {
+    text-align: center;
+  }
+  
+  .navbar-nav .nav-link {
+    margin: 0.3rem 0;
+    padding: 0.8rem 1rem !important;
+    border-radius: 10px;
+  }
+  
+  .navbar-nav .nav-link:hover {
+    background: rgba(147, 197, 253, 0.15);
+    transform: translateX(5px);
+  }
+  
+  .navbar-brand {
+    font-size: 1.4rem !important;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 575.98px) {
+  .navbar {
+    padding: 0.5rem 0;
+  }
+  
+  .navbar-brand {
+    font-size: 1.2rem !important;
+  }
+  
+  .navbar-nav .nav-link {
+    font-size: 0.95rem;
+    padding: 0.7rem 0.8rem !important;
+  }
+}
+
+/* Animation for dropdown appearance */
+.navbar-collapse.collapsing {
+  transition: height 0.35s ease;
+}
+
+.navbar-collapse.show {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Special styling for user actions (Login/Logout) */
+.navbar-nav.ms-auto .nav-link {
+  font-weight: 600 !important;
+}
+
+.navbar-nav.ms-auto .nav-link:last-child {
+  background: rgba(147, 197, 253, 0.2);
+  border: 1px solid rgba(147, 197, 253, 0.4);
+  border-radius: 20px;
+  margin-left: 0.5rem;
+}
+
+.navbar-nav.ms-auto .nav-link:last-child:hover {
+  background: rgba(147, 197, 253, 0.3);
+  border-color: rgba(147, 197, 253, 0.6);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus states for accessibility */
+.navbar-nav .nav-link:focus {
+  outline: 2px solid rgba(147, 197, 253, 0.6);
+  outline-offset: 2px;
+}
+
+/* Loading state animation */
+.navbar-brand::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent, rgba(147, 197, 253, 0.4), transparent);
+  border-radius: 8px;
+  animation: shimmer 2s infinite;
+  opacity: 0;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
