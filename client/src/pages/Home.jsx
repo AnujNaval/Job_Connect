@@ -5,6 +5,7 @@ function Home() {
   const {user} = useAuth();
 
   return (
+    // Hero Section Start
     <section className="hero-section">
       <div className="hero-container">
         <div className="hero-grid">
@@ -87,6 +88,7 @@ function Home() {
         </div>
       </div>
     </section>
+    // Hero Section End
   );
 }
 
