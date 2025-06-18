@@ -17,7 +17,7 @@ function AppNavbar() {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
       <Container>
-        <Navbar.Brand as={Link} to="/">JobConnect</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" className='logo-full'>JobConnect</Navbar.Brand>
 
         {/* Hamburger toggle */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

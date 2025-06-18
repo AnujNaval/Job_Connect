@@ -35,6 +35,8 @@
   font-size: 2rem;
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; 
 }
 
 .brand-tagline {

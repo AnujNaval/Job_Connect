@@ -92,6 +92,15 @@ function Register() {
       </div>
 
       <form onSubmit={handleSubmit} className="register-form">
+        {/* Company Branding Section */}
+        <div className="company-branding">
+          <div className="company-logo">
+            JC
+          </div>
+          <div className="company-name">JobConnect</div>
+          <div className="company-tagline">Connect. Grow. Succeed.</div>
+        </div>
+        
         <h2>Create Account</h2>
 
         {error && <p className="error-message">{error}</p>}
