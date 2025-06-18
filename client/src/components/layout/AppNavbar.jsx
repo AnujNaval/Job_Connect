@@ -9,7 +9,7 @@ function AppNavbar() {
   const { user, logout } = useAuth();
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
       <Container>
         <Navbar.Brand as={Link} to="/">JobConnect</Navbar.Brand>
         
