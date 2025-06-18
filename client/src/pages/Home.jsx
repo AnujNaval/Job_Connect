@@ -25,14 +25,14 @@ function Home() {
             </div>
             
             <div className="hero-buttons">
-              {user?.role === 'jobseeker' && (
+              {user?.role === 'Job Seeker' && (
                 <>
                   <button className="btn-primary">
                   Find Your Dream Job
                 </button>
                 </>
               )}
-              {user?.role === 'employer' && (
+              {user?.role === 'Employer' && (
                 <>
                   <button className="btn-primary">
                   Post a Job

@@ -26,7 +26,7 @@ function AppNavbar() {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
 
-            {user?.role === 'jobseeker' && (
+            {user?.role === 'Job Seeker' && (
               <>
                 <Nav.Link as={Link} to="/jobs">Browse Jobs</Nav.Link>
                 <Nav.Link as={Link} to="/applications">My Applications</Nav.Link>
@@ -34,7 +34,7 @@ function AppNavbar() {
               </>
             )}
 
-            {user?.role === 'employer' && (
+            {user?.role === 'Employer' && (
               <>
                 <Nav.Link as={Link} to="/post-job">Post a Job</Nav.Link>
                 <Nav.Link as={Link} to="/my-jobs">My Jobs</Nav.Link>
@@ -49,7 +49,7 @@ function AppNavbar() {
             <Nav className="ms-auto d-flex align-items-center">
               <Nav.Link className="text-white d-flex align-items-center" as={Link} to="/profile">
                 <i className="fas fa-user-circle fa-2x me-2"></i>
-                {user.role || 'Profile'}
+                {user.name || 'Profile'}
               </Nav.Link>
               <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
             </Nav>

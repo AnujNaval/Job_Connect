@@ -1,5 +1,6 @@
 const express = require("express");
 const config = require("config");
+const cors = require('cors');
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const jobRoutes = require("./routes/jobs");
@@ -11,6 +12,10 @@ const app = express();
 connectDB();
 
 // Middleware to parse json
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
 app.use(express.json());
 
 // Root Route
