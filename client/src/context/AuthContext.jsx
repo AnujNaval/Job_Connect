@@ -29,6 +29,21 @@ export function AuthProvider({ children }) {
       throw err;
     }
   };
+
+   const register = async (formData) => {
+    try {
+      const res = await API.post('/register', formData);
+      const { token, user } = res.data;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      setUser(user);
+      navigate('/'); // Redirect after successful registration
+    } catch (err) {
+      console.error('Registration failed:', err.response?.data || err.message);
+      throw err;
+    }
+  };
   
   const logout = () => {
     localStorage.removeItem('token');
@@ -45,7 +60,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );

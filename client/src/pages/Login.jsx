@@ -30,6 +30,29 @@ function Login() {
 
   return (
     <div className="login-container">
+      {/* Floating Geometric Shapes */}
+      <div className="floating-shapes">
+        {/* Circles */}
+        <div className="shape circle circle-1"></div>
+        <div className="shape circle circle-2"></div>
+        <div className="shape circle circle-3"></div>
+        <div className="shape circle circle-4"></div>
+        
+        {/* Triangles */}
+        <div className="shape triangle triangle-1"></div>
+        <div className="shape triangle triangle-2"></div>
+        <div className="shape triangle triangle-3"></div>
+        
+        {/* Squares/Diamonds */}
+        <div className="shape square square-1"></div>
+        <div className="shape square square-2"></div>
+        <div className="shape square square-3"></div>
+        
+        {/* Hexagons */}
+        <div className="shape hexagon hexagon-1"></div>
+        <div className="shape hexagon hexagon-2"></div>
+      </div>
+
       <form onSubmit={handleSubmit} className="login-form">
         <h2>Welcome Back</h2>
 

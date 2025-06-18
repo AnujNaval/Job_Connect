@@ -1,5 +1,5 @@
-/* Login Page Styles */
-.login-container {
+/* Register Page Styles */
+.register-container {
   min-height: 100vh;
   background: white;
   display: flex;
@@ -12,32 +12,33 @@
 }
 
 @media (min-width: 640px) {
-  .login-container {
+  .register-container {
     padding-top: 5rem;
   }
 }
 
 @media (min-width: 1024px) {
-  .login-container {
+  .register-container {
     padding-top: 4rem;
   }
 }
 
-.login-form {
+.register-form {
   background: white;
-  padding: 3rem 2rem;
+  padding: 2.5rem 2rem;
   border-radius: 1.5rem;
   box-shadow: 
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(229, 231, 235, 0.5);
   width: 100%;
-  max-width: 28rem;
+  max-width: 32rem;
   position: relative;
+  z-index: 10;
   overflow: hidden;
 }
 
-.login-form::before {
+.register-form::before {
   content: '';
   position: absolute;
   top: 0;
@@ -47,16 +48,16 @@
   background: linear-gradient(to right, #2563eb, #9333ea);
 }
 
-.login-form h2 {
+.register-form h2 {
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
   color: #111827;
   position: relative;
 }
 
-.login-form h2::after {
+.register-form h2::after {
   content: '';
   position: absolute;
   bottom: -0.5rem;
@@ -69,7 +70,7 @@
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-group label {
@@ -97,9 +98,9 @@
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #059669;
   box-shadow: 
-    0 0 0 3px rgba(59, 130, 246, 0.1),
+    0 0 0 3px rgba(5, 150, 105, 0.1),
     0 1px 3px 0 rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
@@ -118,7 +119,7 @@
   padding-right: 2.5rem;
 }
 
-.btn-login {
+.btn-register {
   width: 100%;
   background: linear-gradient(135deg, #2563eb 0%, #9333ea 100%);
   color: white;
@@ -133,9 +134,10 @@
   letter-spacing: 0.05em;
   position: relative;
   overflow: hidden;
+  margin-top: 0.5rem;
 }
 
-.btn-login::before {
+.btn-register::before {
   content: '';
   position: absolute;
   top: 0;
@@ -146,18 +148,18 @@
   transition: left 0.5s;
 }
 
-.btn-login:hover {
+.btn-register:hover {
   transform: translateY(-2px);
   box-shadow: 
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.btn-login:hover::before {
+.btn-register:hover::before {
   left: 100%;
 }
 
-.btn-login:active {
+.btn-register:active {
   transform: translateY(0);
 }
 
@@ -186,13 +188,13 @@
 }
 
 /* Loading state for button */
-.btn-login:disabled {
+.btn-register:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
 }
 
-.btn-login:disabled:hover {
+.btn-register:disabled:hover {
   transform: none;
   box-shadow: 
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
@@ -200,7 +202,7 @@
 }
 
 /* Animation for form appearance */
-.login-form {
+.register-form {
   animation: slideUp 0.6s ease-out;
 }
 
@@ -217,13 +219,17 @@
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
-  .login-form {
+  .register-form {
     padding: 2rem 1.5rem;
     margin: 1rem;
   }
   
-  .login-form h2 {
+  .register-form h2 {
     font-size: 1.75rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
   }
 }
 
@@ -245,21 +251,21 @@
   font-weight: bold;
 }
 
-/* Register Link Styles */
-.register-link {
+/* Login Link Styles */
+.login-link {
   margin-top: 2rem;
   text-align: center;
   padding-top: 1.5rem;
   border-top: 1px solid #e5e7eb;
 }
 
-.register-link p {
+.login-link p {
   color: #6b7280;
   font-size: 0.875rem;
   margin: 0;
 }
 
-.register-link a {
+.login-link a {
   color: #2563eb;
   text-decoration: none;
   font-weight: 600;
@@ -267,7 +273,7 @@
   transition: all 0.3s ease;
 }
 
-.register-link a::after {
+.login-link a::after {
   content: '';
   position: absolute;
   bottom: -2px;
@@ -278,7 +284,7 @@
   transition: width 0.3s ease;
 }
 
-.register-link a:hover {
+.login-link a:hover {
   background: linear-gradient(to right, #2563eb, #9333ea);
   -webkit-background-clip: text;
   background-clip: text;
@@ -286,7 +292,7 @@
   color: transparent;
 }
 
-.register-link a:hover::after {
+.login-link a:hover::after {
   width: 100%;
 }
 
@@ -301,21 +307,6 @@
   z-index: 1;
 }
 
-.login-form {
-  position: relative;
-  z-index: 10;
-  background: white;
-  padding: 3rem 2rem;
-  border-radius: 1.5rem;
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(229, 231, 235, 0.5);
-  width: 100%;
-  max-width: 28rem;
-  overflow: hidden;
-}
-
 .shape {
   position: absolute;
   opacity: 0.08;
@@ -328,35 +319,43 @@
 }
 
 .circle-1 {
-  width: 60px;
-  height: 60px;
-  top: 10%;
-  left: 15%;
+  width: 50px;
+  height: 50px;
+  top: 8%;
+  left: 12%;
   animation: float1 8s ease-in-out infinite;
 }
 
 .circle-2 {
-  width: 100px;
-  height: 100px;
-  top: 70%;
-  right: 10%;
+  width: 80px;
+  height: 80px;
+  top: 65%;
+  right: 8%;
   animation: float2 10s ease-in-out infinite;
 }
 
 .circle-3 {
-  width: 40px;
-  height: 40px;
-  top: 30%;
-  right: 25%;
+  width: 35px;
+  height: 35px;
+  top: 25%;
+  right: 20%;
   animation: float3 6s ease-in-out infinite;
 }
 
 .circle-4 {
-  width: 80px;
-  height: 80px;
-  bottom: 20%;
-  left: 8%;
+  width: 70px;
+  height: 70px;
+  bottom: 25%;
+  left: 6%;
   animation: float4 9s ease-in-out infinite;
+}
+
+.circle-5 {
+  width: 45px;
+  height: 45px;
+  top: 45%;
+  left: 85%;
+  animation: float1 7s ease-in-out infinite;
 }
 
 /* Triangles */
@@ -367,33 +366,43 @@
 }
 
 .triangle-1 {
-  border-left: 25px solid transparent;
-  border-right: 25px solid transparent;
-  border-bottom: 43px solid #3b82f6;
-  top: 15%;
-  right: 15%;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 35px solid #059669;
+  top: 12%;
+  right: 12%;
   animation: rotate1 12s linear infinite, float1 7s ease-in-out infinite;
   opacity: 0.06;
 }
 
 .triangle-2 {
-  border-left: 35px solid transparent;
-  border-right: 35px solid transparent;
-  border-bottom: 60px solid #8b5cf6;
-  bottom: 30%;
-  right: 20%;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 52px solid #8b5cf6;
+  bottom: 35%;
+  right: 25%;
   animation: rotate2 15s linear infinite, float2 8s ease-in-out infinite;
   opacity: 0.05;
 }
 
 .triangle-3 {
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-bottom: 35px solid #6366f1;
-  top: 60%;
-  left: 10%;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-bottom: 31px solid #6366f1;
+  top: 55%;
+  left: 8%;
   animation: rotate3 10s linear infinite, float3 9s ease-in-out infinite;
   opacity: 0.07;
+}
+
+.triangle-4 {
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 43px solid #2563eb;
+  top: 75%;
+  right: 5%;
+  animation: rotate1 14s linear infinite, float4 11s ease-in-out infinite;
+  opacity: 0.06;
 }
 
 /* Squares/Diamonds */
@@ -403,36 +412,45 @@
 }
 
 .square-1 {
-  width: 50px;
-  height: 50px;
-  top: 25%;
-  left: 5%;
+  width: 40px;
+  height: 40px;
+  top: 20%;
+  left: 3%;
   animation: rotate1 20s linear infinite, float4 11s ease-in-out infinite;
   opacity: 0.06;
 }
 
 .square-2 {
-  width: 30px;
-  height: 30px;
-  bottom: 15%;
-  right: 5%;
+  width: 25px;
+  height: 25px;
+  bottom: 12%;
+  right: 3%;
   animation: rotate2 16s linear infinite, float1 6s ease-in-out infinite;
   opacity: 0.08;
 }
 
 .square-3 {
-  width: 70px;
-  height: 70px;
-  top: 5%;
-  left: 40%;
+  width: 55px;
+  height: 55px;
+  top: 3%;
+  left: 35%;
   animation: rotate3 18s linear infinite, float2 13s ease-in-out infinite;
   opacity: 0.05;
 }
 
+.square-4 {
+  width: 35px;
+  height: 35px;
+  top: 40%;
+  right: 2%;
+  animation: rotate1 22s linear infinite, float3 8s ease-in-out infinite;
+  opacity: 0.07;
+}
+
 /* Hexagons */
 .hexagon {
-  width: 60px;
-  height: 34.64px;
+  width: 50px;
+  height: 28.87px;
   background: #6366f1;
   position: relative;
   opacity: 0.06;
@@ -443,30 +461,36 @@
   content: "";
   position: absolute;
   width: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
 }
 
 .hexagon:before {
   bottom: 100%;
-  border-bottom: 17.32px solid #6366f1;
+  border-bottom: 14.43px solid #6366f1;
 }
 
 .hexagon:after {
   top: 100%;
-  border-top: 17.32px solid #6366f1;
+  border-top: 14.43px solid #6366f1;
 }
 
 .hexagon-1 {
-  top: 40%;
-  right: 8%;
+  top: 35%;
+  right: 6%;
   animation: rotate1 14s linear infinite, float3 10s ease-in-out infinite;
 }
 
 .hexagon-2 {
-  bottom: 40%;
-  left: 20%;
+  bottom: 45%;
+  left: 18%;
   animation: rotate2 17s linear infinite, float4 12s ease-in-out infinite;
+}
+
+.hexagon-3 {
+  top: 60%;
+  left: 75%;
+  animation: rotate3 19s linear infinite, float1 9s ease-in-out infinite;
 }
 
 /* Animation Keyframes */
@@ -510,7 +534,7 @@
 
 /* Responsive adjustments for shapes */
 @media (max-width: 768px) {
-  .circle-2, .square-3, .hexagon-1 {
+  .circle-2, .circle-5, .square-3, .square-4, .hexagon-1, .triangle-4 {
     display: none;
   }
   
@@ -520,7 +544,7 @@
 }
 
 @media (max-width: 480px) {
-  .triangle-2, .square-1, .hexagon-2 {
+  .triangle-2, .square-1, .hexagon-2, .hexagon-3, .circle-4 {
     display: none;
   }
 }
