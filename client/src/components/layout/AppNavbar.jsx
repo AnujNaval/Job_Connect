@@ -1,22 +1,27 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/Navbar.css';
 
 function AppNavbar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
       <Container>
         <Navbar.Brand as={Link} to="/">JobConnect</Navbar.Brand>
-        
-        {/* Hamburger toggle button - only shows on small screens */}
+
+        {/* Hamburger toggle */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        
-        {/* Collapsible content - hides on small screens until toggle is clicked */}
+
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
@@ -39,16 +44,21 @@ function AppNavbar() {
             )}
           </Nav>
 
-          <Nav className="ms-auto">
-            {user ? (
-              <Nav.Link onClick={logout}>Logout</Nav.Link>
-            ) : (
-              <>
-                <Nav.Link as={Link} to="/login">Login</Nav.Link>
-                <Nav.Link as={Link} to="/register">Register</Nav.Link>
-              </>
-            )}
-          </Nav>
+          {/* Profile and Logout */}
+          {user ? (
+            <Nav className="ms-auto d-flex align-items-center">
+              <Nav.Link className="text-white d-flex align-items-center" as={Link} to="/profile">
+                <i className="fas fa-user-circle fa-2x me-2"></i>
+                {user.role || 'Profile'}
+              </Nav.Link>
+              <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+            </Nav>
+          ) : (
+            <Nav className="ms-auto">
+              <Nav.Link as={Link} to="/login">Login</Nav.Link>
+              <Nav.Link as={Link} to="/register">Register</Nav.Link>
+            </Nav>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
