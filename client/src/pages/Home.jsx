@@ -109,7 +109,7 @@ function Home() {
             <div className="works-card">
               <div className="card-step">1</div>
               <div className="card-icon">
-                👤
+                <i className="fas fa-user"></i>
               </div>
               <h3 className="card-title">Create an Account</h3>
               <p className="card-description">
@@ -139,7 +139,7 @@ function Home() {
             <div className="works-card">
               <div className="card-step">2</div>
               <div className="card-icon">
-                🔍
+                <i className="fas fa-search"></i>
               </div>
               <h3 className="card-title">Find Jobs / Post Jobs</h3>
               <p className="card-description">
@@ -169,7 +169,7 @@ function Home() {
             <div className="works-card">
               <div className="card-step">3</div>
               <div className="card-icon">
-                🎯
+                <i className="fas fa-crosshairs"></i>
               </div>
               <h3 className="card-title">Apply / Hire Candidates</h3>
               <p className="card-description">
