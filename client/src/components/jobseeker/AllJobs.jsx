@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useJobs } from "../../context/JobContext";
 import JobCard from "../common/JobCard";
-import Pagination from "../common/Pagination"; // Import the new Pagination component
+import Pagination from "../common/Pagination"; 
 import "../../styles/AllJobs.css";
 
 function AllJobs() {
@@ -248,10 +248,10 @@ function AllJobs() {
               <label className="filter-label">Salary Range</label>
               <select className="filter-select">
                 <option value="">Any Salary</option>
-                <option value="0-50000">Under $50,000</option>
-                <option value="50000-80000">$50,000 - $80,000</option>
-                <option value="80000-120000">$80,000 - $120,000</option>
-                <option value="120000+">$120,000+</option>
+                <option value="0-50000">Under &#8377;50,000</option>
+                <option value="50000-80000">&#8377;50,000 - &#8377;80,000</option>
+                <option value="80000-120000">&#8377;80,000 - &#8377;120,000</option>
+                <option value="120000+">&#8377;120,000+</option>
               </select>
             </div>
 
