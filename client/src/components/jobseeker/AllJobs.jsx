@@ -1,21 +1,32 @@
 import { useEffect, useState } from "react";
 import { useJobs } from "../../context/JobContext";
 import JobCard from "../common/JobCard";
+import Pagination from "../common/Pagination"; // Import the new Pagination component
 import "../../styles/AllJobs.css";
 
 function AllJobs() {
   const { jobs, loading, error, fetchAllJobs } = useJobs();
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     fetchAllJobs();
   }, []);
 
+  // Reset to first page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, locationFilter]);
+
   const handleSearch = (e) => {
     e.preventDefault();
     // Add your search logic here
     console.log("Searching for:", searchTerm, "in", locationFilter);
+    setCurrentPage(1); // Reset to first page on search
   };
 
   const handleViewDetails = (jobId) => {
@@ -28,6 +39,35 @@ function AllJobs() {
     // Handle job application
     console.log("Apply to job:", jobId);
   };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // Scroll to top of results section
+    const resultsSection = document.querySelector('.jobs-results-section');
+    if (resultsSection) {
+      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Filter jobs based on search criteria (you can expand this logic)
+  const filteredJobs = jobs.filter(job => {
+    const matchesSearch = searchTerm === "" || 
+      job.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesLocation = locationFilter === "" ||
+      job.location?.toLowerCase().includes(locationFilter.toLowerCase());
+    
+    return matchesSearch && matchesLocation;
+  });
+
+  // Calculate pagination
+  const totalItems = filteredJobs.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentJobs = filteredJobs.slice(startIndex, endIndex);
 
   return (
     <>
@@ -122,8 +162,10 @@ function AllJobs() {
               {/* Stats Section */}
               <div className="alljobs-stats">
                 <div className="stat-item">
-                  <span className="stat-number">{jobs?.length || 0}</span>
-                  <span className="stat-label">Active Jobs</span>
+                  <span className="stat-number">{totalItems || 0}</span>
+                  <span className="stat-label">
+                    {searchTerm || locationFilter ? 'Matching Jobs' : 'Active Jobs'}
+                  </span>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
@@ -171,6 +213,7 @@ function AllJobs() {
               onClick={() => {
                 setSearchTerm("");
                 setLocationFilter("");
+                setCurrentPage(1);
                 // Reset other filters if you add them
               }}
             >
@@ -229,11 +272,12 @@ function AllJobs() {
           <div className="results-header">
             <div className="results-info">
               <h3 className="results-title">
-                {loading ? "Loading..." : `${jobs.length} Jobs Found`}
+                {loading ? "Loading..." : `${totalItems} Jobs Found`}
               </h3>
               <p className="results-subtitle">
                 {searchTerm && `Results for "${searchTerm}"`}
                 {locationFilter && ` in ${locationFilter}`}
+                {totalPages > 1 && ` - Page ${currentPage} of ${totalPages}`}
               </p>
             </div>
 
@@ -286,7 +330,7 @@ function AllJobs() {
           {/* Jobs List */}
           {!loading && !error && (
             <>
-              {jobs.length === 0 ? (
+              {totalItems === 0 ? (
                 <div className="no-jobs-container">
                   <svg
                     className="no-jobs-icon"
@@ -311,6 +355,7 @@ function AllJobs() {
                     onClick={() => {
                       setSearchTerm("");
                       setLocationFilter("");
+                      setCurrentPage(1);
                       fetchAllJobs();
                     }}
                   >
@@ -318,53 +363,26 @@ function AllJobs() {
                   </button>
                 </div>
               ) : (
-                <div className="jobs-grid">
-                  {jobs.map((job) => (
-                    <JobCard
-                      key={job._id}
-                      job={job}
-                      onViewDetails={handleViewDetails}
-                      onApply={handleApply}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {/* Pagination */}
-              {jobs.length > 0 && (
-                <div className="pagination-container">
-                  <button className="pagination-btn pagination-prev">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M15 19l-7-7 7-7"
+                <>
+                  <div className="jobs-grid">
+                    {currentJobs.map((job) => (
+                      <JobCard
+                        key={job._id}
+                        job={job}
+                        onViewDetails={handleViewDetails}
+                        onApply={handleApply}
                       />
-                    </svg>
-                    Previous
-                  </button>
-
-                  <div className="pagination-numbers">
-                    <button className="pagination-number active">1</button>
-                    <button className="pagination-number">2</button>
-                    <button className="pagination-number">3</button>
-                    <span className="pagination-dots">...</span>
-                    <button className="pagination-number">12</button>
+                    ))}
                   </div>
 
-                  <button className="pagination-btn pagination-next">
-                    Next
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                  {/* Pagination Component */}
+                  <Pagination
+                    currentPage={currentPage}
+                    totalItems={totalItems}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={handlePageChange}
+                  />
+                </>
               )}
             </>
           )}
