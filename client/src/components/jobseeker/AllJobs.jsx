@@ -299,38 +299,10 @@ function AllJobs() {
                       </svg>
                       <input
                         type="text"
-                        placeholder="Job title, keywords, or company"
+                        placeholder="Job title"
                         className="search-input"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                      />
-                    </div>
-                    <div className="input-group">
-                      <svg
-                        className="location-icon"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      <input
-                        type="text"
-                        placeholder="City, state, or remote"
-                        className="search-input"
-                        value={locationFilter}
-                        onChange={(e) => setLocationFilter(e.target.value)}
                       />
                     </div>
                     <button type="submit" className="search-btn">
