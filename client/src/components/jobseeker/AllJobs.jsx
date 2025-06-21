@@ -1,37 +1,174 @@
 import { useEffect, useState } from "react";
 import { useJobs } from "../../context/JobContext";
 import JobCard from "../common/JobCard";
-import Pagination from "../common/Pagination"; 
+import Pagination from "../common/Pagination";
 import "../../styles/AllJobs.css";
 
 function AllJobs() {
   const { jobs, loading, error, fetchAllJobs } = useJobs();
+  const [totalJobsCount, setTotalJobsCount] = useState(0);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  // Search and filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
-  
+  const [jobTypeFilter, setJobTypeFilter] = useState("");
+  const [experienceLevelFilter, setExperienceLevelFilter] = useState("");
+  const [workModeFilter, setWorkModeFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [countryFilter, setCountryFilter] = useState("");
+  const [salaryRangeFilter, setSalaryRangeFilter] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  // Filter options (matching your job schema enums)
+  const jobTypes = ["Full-Time", "Internship", "Part-Time"];
+  const experienceLevels = [
+    "Entry Level",
+    "Mid Level",
+    "Senior Level",
+    "Executive Level",
+  ];
+  const workModes = ["Remote", "On-site", "Hybrid"];
+  const categories = [
+    "Technology",
+    "Healthcare",
+    "Finance",
+    "Education",
+    "Marketing",
+    "Design",
+    "Engineering",
+    "Sales",
+    "Other",
+  ];
+  const countries = [
+    "India",
+    "USA",
+    "UK",
+    "Canada",
+    "Australia",
+    "Germany",
+    "Singapore",
+  ];
+
+  // Initial load - fetch all jobs without filters
   useEffect(() => {
-    fetchAllJobs();
+    const initializeData = async () => {
+      await fetchAllJobs({}); // Fetch all jobs without filters
+      setIsInitialLoad(false);
+    };
+    initializeData();
   }, []);
 
-  // Reset to first page when search changes
+  // Set total jobs count when jobs are loaded without filters
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, locationFilter]);
+    if (!isInitialLoad && jobs && jobs.length > 0) {
+      // Check if no filters are applied
+      const hasFilters =
+        searchTerm ||
+        locationFilter ||
+        jobTypeFilter ||
+        experienceLevelFilter ||
+        workModeFilter ||
+        categoryFilter ||
+        countryFilter;
+
+      if (!hasFilters) {
+        setTotalJobsCount(jobs.length);
+      }
+    }
+  }, [
+    jobs,
+    isInitialLoad,
+    searchTerm,
+    locationFilter,
+    jobTypeFilter,
+    experienceLevelFilter,
+    workModeFilter,
+    categoryFilter,
+    countryFilter,
+  ]);
+
+  // Fetch filtered jobs when filters change
+  useEffect(() => {
+    if (!isInitialLoad) {
+      fetchFilteredJobs();
+    }
+  }, [
+    searchTerm,
+    locationFilter,
+    jobTypeFilter,
+    experienceLevelFilter,
+    workModeFilter,
+    categoryFilter,
+    countryFilter,
+    isInitialLoad,
+  ]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    if (!isInitialLoad) {
+      setCurrentPage(1);
+    }
+  }, [
+    searchTerm,
+    locationFilter,
+    jobTypeFilter,
+    experienceLevelFilter,
+    workModeFilter,
+    categoryFilter,
+    countryFilter,
+    isInitialLoad,
+  ]);
+
+  const fetchFilteredJobs = async () => {
+    // Build query parameters object
+    const queryParams = {};
+
+    if (searchTerm.trim()) {
+      // Since backend supports regex search on title and companyName
+      queryParams.title = searchTerm.trim();
+    }
+
+    if (locationFilter.trim()) {
+      queryParams.city = locationFilter.trim();
+    }
+
+    if (jobTypeFilter) {
+      queryParams.jobType = jobTypeFilter;
+    }
+
+    if (experienceLevelFilter) {
+      queryParams.experienceLevel = experienceLevelFilter;
+    }
+
+    if (workModeFilter) {
+      queryParams.workMode = workModeFilter;
+    }
+
+    if (categoryFilter) {
+      queryParams.category = categoryFilter;
+    }
+
+    if (countryFilter) {
+      queryParams.country = countryFilter;
+    }
+
+    // Call fetchAllJobs with query parameters
+    await fetchAllJobs(queryParams);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Add your search logic here
-    console.log("Searching for:", searchTerm, "in", locationFilter);
-    setCurrentPage(1); // Reset to first page on search
+    fetchFilteredJobs();
+    setCurrentPage(1);
   };
 
   const handleViewDetails = (jobId) => {
     // Navigate to job details page
-    // You can use React Router here
     console.log("View job:", jobId);
   };
 
@@ -43,31 +180,87 @@ function AllJobs() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
     // Scroll to top of results section
-    const resultsSection = document.querySelector('.jobs-results-section');
+    const resultsSection = document.querySelector(".jobs-results-section");
     if (resultsSection) {
-      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
-  // Filter jobs based on search criteria (you can expand this logic)
-  const filteredJobs = jobs.filter(job => {
-    const matchesSearch = searchTerm === "" || 
-      job.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesLocation = locationFilter === "" ||
-      job.location?.toLowerCase().includes(locationFilter.toLowerCase());
-    
-    return matchesSearch && matchesLocation;
-  });
+  const clearAllFilters = () => {
+    setSearchTerm("");
+    setLocationFilter("");
+    setJobTypeFilter("");
+    setExperienceLevelFilter("");
+    setWorkModeFilter("");
+    setCategoryFilter("");
+    setCountryFilter("");
+    setSalaryRangeFilter("");
+    setCurrentPage(1);
+    // Fetch all jobs without filters
+    fetchAllJobs({});
+  };
+
+  // Client-side filtering for salary range (since schema uses fixedSalary as Number)
+  const filterJobsBySalary = (jobsList) => {
+    if (!salaryRangeFilter) return jobsList;
+
+    return jobsList.filter((job) => {
+      const salary = job.fixedSalary || 0;
+
+      switch (salaryRangeFilter) {
+        case "0-500000":
+          return salary < 500000;
+        case "500000-800000":
+          return salary >= 500000 && salary <= 800000;
+        case "800000-1200000":
+          return salary >= 800000 && salary <= 1200000;
+        case "1200000+":
+          return salary > 1200000;
+        default:
+          return true;
+      }
+    });
+  };
+
+  // Client-side sorting
+  const sortJobs = (jobsList) => {
+    const sortedJobs = [...jobsList];
+
+    switch (sortBy) {
+      case "newest":
+        return sortedJobs.sort(
+          (a, b) => new Date(b.jobPostedOn) - new Date(a.jobPostedOn)
+        );
+      case "oldest":
+        return sortedJobs.sort(
+          (a, b) => new Date(a.jobPostedOn) - new Date(b.jobPostedOn)
+        );
+      case "salary-high":
+        return sortedJobs.sort(
+          (a, b) => (b.fixedSalary || 0) - (a.fixedSalary || 0)
+        );
+      case "salary-low":
+        return sortedJobs.sort(
+          (a, b) => (a.fixedSalary || 0) - (b.fixedSalary || 0)
+        );
+      case "company":
+        return sortedJobs.sort((a, b) =>
+          (a.companyName || "").localeCompare(b.companyName || "")
+        );
+      default:
+        return sortedJobs;
+    }
+  };
+
+  // Apply client-side filters and sorting
+  const processedJobs = sortJobs(filterJobsBySalary(jobs || []));
 
   // Calculate pagination
-  const totalItems = filteredJobs.length;
+  const totalItems = processedJobs.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentJobs = filteredJobs.slice(startIndex, endIndex);
+  const currentJobs = processedJobs.slice(startIndex, endIndex);
 
   return (
     <>
@@ -162,10 +355,8 @@ function AllJobs() {
               {/* Stats Section */}
               <div className="alljobs-stats">
                 <div className="stat-item">
-                  <span className="stat-number">{totalItems || 0}</span>
-                  <span className="stat-label">
-                    {searchTerm || locationFilter ? 'Matching Jobs' : 'Active Jobs'}
-                  </span>
+                  <span className="stat-number">{totalJobsCount || 0}</span>
+                  <span className="stat-label">Total Jobs</span>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
@@ -208,60 +399,104 @@ function AllJobs() {
         <div className="jobs-filter-section">
           <div className="filter-header">
             <h2 className="filter-title">Filter Jobs</h2>
-            <button
-              className="clear-filters-btn"
-              onClick={() => {
-                setSearchTerm("");
-                setLocationFilter("");
-                setCurrentPage(1);
-                // Reset other filters if you add them
-              }}
-            >
+            <button className="clear-filters-btn" onClick={clearAllFilters}>
               Clear All Filters
             </button>
           </div>
 
           <div className="filter-options">
             <div className="filter-group">
+              <label className="filter-label">Category</label>
+              <select
+                className="filter-select"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label className="filter-label">Country</label>
+              <select
+                className="filter-select"
+                value={countryFilter}
+                onChange={(e) => setCountryFilter(e.target.value)}
+              >
+                <option value="">All Countries</option>
+                {countries.map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
               <label className="filter-label">Job Type</label>
-              <select className="filter-select">
+              <select
+                className="filter-select"
+                value={jobTypeFilter}
+                onChange={(e) => setJobTypeFilter(e.target.value)}
+              >
                 <option value="">All Types</option>
-                <option value="full-time">Full Time</option>
-                <option value="part-time">Part Time</option>
-                <option value="contract">Contract</option>
-                <option value="internship">Internship</option>
+                {jobTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="filter-group">
               <label className="filter-label">Experience Level</label>
-              <select className="filter-select">
+              <select
+                className="filter-select"
+                value={experienceLevelFilter}
+                onChange={(e) => setExperienceLevelFilter(e.target.value)}
+              >
                 <option value="">All Levels</option>
-                <option value="entry">Entry Level</option>
-                <option value="mid">Mid Level</option>
-                <option value="senior">Senior Level</option>
-                <option value="executive">Executive</option>
+                {experienceLevels.map((level) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label className="filter-label">Work Mode</label>
+              <select
+                className="filter-select"
+                value={workModeFilter}
+                onChange={(e) => setWorkModeFilter(e.target.value)}
+              >
+                <option value="">Any Mode</option>
+                {workModes.map((mode) => (
+                  <option key={mode} value={mode}>
+                    {mode}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="filter-group">
               <label className="filter-label">Salary Range</label>
-              <select className="filter-select">
+              <select
+                className="filter-select"
+                value={salaryRangeFilter}
+                onChange={(e) => setSalaryRangeFilter(e.target.value)}
+              >
                 <option value="">Any Salary</option>
-                <option value="0-50000">Under &#8377;50,000</option>
-                <option value="50000-80000">&#8377;50,000 - &#8377;80,000</option>
-                <option value="80000-120000">&#8377;80,000 - &#8377;120,000</option>
-                <option value="120000+">&#8377;120,000+</option>
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label className="filter-label">Remote Work</label>
-              <select className="filter-select">
-                <option value="">Any</option>
-                <option value="remote">Remote</option>
-                <option value="hybrid">Hybrid</option>
-                <option value="onsite">On-site</option>
+                <option value="0-500000">Under ₹5,00,000</option>
+                <option value="500000-800000">₹5,00,000 - ₹8,00,000</option>
+                <option value="800000-1200000">₹8,00,000 - ₹12,00,000</option>
+                <option value="1200000+">₹12,00,000+</option>
               </select>
             </div>
           </div>
@@ -283,7 +518,11 @@ function AllJobs() {
 
             <div className="sort-options">
               <label className="sort-label">Sort by:</label>
-              <select className="sort-select">
+              <select
+                className="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
                 <option value="salary-high">Salary: High to Low</option>
@@ -321,7 +560,7 @@ function AllJobs() {
               </svg>
               <h3 className="error-title">Something went wrong</h3>
               <p className="error-message">{error}</p>
-              <button className="retry-btn" onClick={() => fetchAllJobs()}>
+              <button className="retry-btn" onClick={() => fetchAllJobs({})}>
                 Try Again
               </button>
             </div>
@@ -350,15 +589,7 @@ function AllJobs() {
                     Try adjusting your search criteria or browse all available
                     positions.
                   </p>
-                  <button
-                    className="browse-all-btn"
-                    onClick={() => {
-                      setSearchTerm("");
-                      setLocationFilter("");
-                      setCurrentPage(1);
-                      fetchAllJobs();
-                    }}
-                  >
+                  <button className="browse-all-btn" onClick={clearAllFilters}>
                     Browse All Jobs
                   </button>
                 </div>

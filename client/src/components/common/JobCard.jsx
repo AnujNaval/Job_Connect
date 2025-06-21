@@ -57,7 +57,7 @@ function JobCard({ job, onViewDetails, onApply }) {
               {job.fixedSalary ? (
                 <>
                   <i className="fa fa-indian-rupee-sign"></i>{" "}
-                  {job.fixedSalary.toLocaleString()}
+                  {job.fixedSalary.toLocaleString("en-IN")}{" "}/ yr
                 </>
               ) : (
                 "Salary not disclosed"
