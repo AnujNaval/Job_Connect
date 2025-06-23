@@ -72,15 +72,14 @@ function Home() {
               <div className="decoration-circle-1"></div>
               <div className="decoration-circle-2"></div>
               
-              {/* Floating cards */}
-              <div className="floating-card floating-card-1">
+              {/* Floating Cards */}
+              <div className="hero-floating-card hero-floating-card-1">
                 <div className="card-content">
                   <div className="status-dot status-green"></div>
                   <span className="card-text">New Job Alert</span>
                 </div>
               </div>
-              
-              <div className="floating-card floating-card-2">
+              <div className="hero-floating-card hero-floating-card-2">
                 <div className="card-content">
                   <div className="status-dot status-blue"></div>
                   <span className="card-text">Profile Viewed</span>

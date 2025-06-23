@@ -258,14 +258,14 @@
 }
 
 .floating-card-1 {
-  top: 20%;
-  left: 10%;
+  top: 50%;
+  left: 5%;
   animation: float 4s ease-in-out infinite;
 }
 
 .floating-card-2 {
-  bottom: 30%;
-  right: 10%;
+  bottom: 20%;
+  right: 5%;
   animation: float-delayed 4s ease-in-out infinite;
 }
 
