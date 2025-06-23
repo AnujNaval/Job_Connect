@@ -1,7 +1,9 @@
-import React from "react";
 import "./JobCard.css";
+import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 function JobCard({ job, onViewDetails, onApply }) {
+  const {user} = useAuth();
   return (
     <div className="job-card">
       <div className="job-card-header">
@@ -93,12 +95,23 @@ function JobCard({ job, onViewDetails, onApply }) {
       </div>
 
       <div className="job-card-footer">
-        <button className="view-job-btn" onClick={() => onViewDetails(job._id)}>
+        <Link to={`/jobs/${job._id}`} className="view-job-btn">
           View Details
-        </button>
-        <button className="apply-job-btn" onClick={() => onApply(job._id)}>
-          Apply Now
-        </button>
+        </Link>
+        {user?.role === "Job Seeker" && (
+          <>
+            <button className="apply-job-btn" onClick={() => onApply(job._id)}>
+              Apply Now
+            </button>
+          </>
+        )}
+        {user?.role === "Employer" && (
+          <>
+            <button className="apply-job-btn" onClick={() => onApply(job._id)}>
+              Edit Now
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

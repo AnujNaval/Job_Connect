@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register"
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AllJobs from "./components/jobseeker/AllJobs";
+import JobList from "./components/employer/JobList";
 import "./styles/App.css"
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       >
         <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<AllJobs />} />
+        <Route path="/my-jobs" element={<JobList />} />
         {/* Add other protected routes here */}
       </Route>
     </Routes>

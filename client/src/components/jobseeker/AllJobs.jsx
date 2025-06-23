@@ -129,7 +129,6 @@ function AllJobs() {
     const queryParams = {};
 
     if (searchTerm.trim()) {
-      // Since backend supports regex search on title and companyName
       queryParams.title = searchTerm.trim();
     }
 
