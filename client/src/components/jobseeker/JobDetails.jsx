@@ -9,9 +9,6 @@ const JobDetails = () => {
   const navigate = useNavigate();
   const { selectedJob, loading, error, fetchJobById, clearError } = useJobs();
   const { user } = useAuth();
-  const [isSaved, setIsSaved] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   // Debug logging
   console.log("JobDetails Debug:", {
@@ -35,33 +32,6 @@ const JobDetails = () => {
       clearError();
     };
   }, [jobId]);
-
-  const handleBack = () => {
-    navigate(-1);
-  };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: selectedJob?.title,
-          text: `Check out this job: ${selectedJob?.title} at ${selectedJob?.companyName}`,
-          url: window.location.href,
-        });
-      } catch (error) {
-        console.log("Error sharing:", error);
-      }
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
-    }
-  };
-
-  const handleSave = () => {
-    setIsSaved(!isSaved);
-    // Here you would typically save to backend
-  };
 
   const handleApply = () => {
     if (!user) {
@@ -116,30 +86,6 @@ const JobDetails = () => {
     }
     };
 
-  const handleDeleteConfirm = async () => {
-    setIsDeleting(true);
-    try {
-      // Add your delete API call here
-      // await deleteJob(jobId);
-      
-      // Simulate API call for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      alert("Job deleted successfully!");
-      navigate("/jobs");
-    } catch (error) {
-      console.error("Error deleting job:", error);
-      alert("Failed to delete job. Please try again.");
-    } finally {
-      setIsDeleting(false);
-      setShowDeleteConfirm(false);
-    }
-  };
-
-  const handleDeleteCancel = () => {
-    setShowDeleteConfirm(false);
-  };
-
   const formatSalary = (salary) => {
     if (!salary) return "Salary not specified";
     return new Intl.NumberFormat("en-IN", {
@@ -156,10 +102,6 @@ const JobDetails = () => {
       month: "long",
       day: "numeric",
     });
-  };
-
-  const getCategoryClass = (category) => {
-    return `category-tag ${category?.toLowerCase().replace(/\s+/g, "")}`;
   };
 
   const getCompanyInitials = (companyName) => {
@@ -251,47 +193,6 @@ const JobDetails = () => {
 
   return (
     <div className="job-details-page">
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="delete-modal-overlay">
-          <div className="delete-modal">
-            <div className="delete-modal-icon">
-              <i className="fas fa-exclamation-triangle"></i>
-            </div>
-            <h3 className="delete-modal-title">Delete Job Posting</h3>
-            <p className="delete-modal-message">
-              Are you sure you want to delete this job posting? This action cannot be undone.
-            </p>
-            <div className="delete-modal-actions">
-              <button
-                className="delete-cancel-button"
-                onClick={handleDeleteCancel}
-                disabled={isDeleting}
-              >
-                Cancel
-              </button>
-              <button
-                className="delete-confirm-button"
-                onClick={handleDeleteConfirm}
-                disabled={isDeleting}
-              >
-                {isDeleting ? (
-                  <>
-                    <div className="delete-spinner"></div>
-                    Deleting...
-                  </>
-                ) : (
-                  <>
-                    <i className="fas fa-trash"></i>
-                    Delete
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Header Section */}
       <header className="job-header-section">
         <div className="job-header-container">
