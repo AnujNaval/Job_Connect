@@ -7,8 +7,11 @@ import "../../styles/JobDetails.css";
 const JobDetails = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
-  const { selectedJob, loading, error, fetchJobById, clearError } = useJobs();
+  const { selectedJob, loading, error, fetchJobById, clearError, deleteJob } = useJobs();
   const { user } = useAuth();
+  
+  // Add the missing state for deletion loading
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Debug logging
   console.log("JobDetails Debug:", {
@@ -70,21 +73,16 @@ const JobDetails = () => {
 
     setIsDeleting(true);
     try {
-        // Add your delete API call here
-        // await deleteJob(jobId);
-        
-        // Simulate API call for now
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
+        await deleteJob(jobId); // Make sure to await the deletion
         alert("Job deleted successfully!");
-        navigate("/jobs");
+        navigate("/my-jobs");
     } catch (error) {
         console.error("Error deleting job:", error);
         alert("Failed to delete job. Please try again.");
     } finally {
         setIsDeleting(false);
     }
-    };
+  };
 
   const formatSalary = (salary) => {
     if (!salary) return "Salary not specified";
@@ -116,7 +114,7 @@ const JobDetails = () => {
   };
 
   // Show loading state
-  if (loading) {
+  if (loading || isDeleting) {
     console.log("Rendering loading state");
     return (
       <div className="job-details-page">
@@ -124,7 +122,7 @@ const JobDetails = () => {
           <div className="job-loading-content">
             <div className="job-loading-spinner"></div>
             <p className="job-loading-text">
-              Loading job details... (ID: {jobId})
+              {isDeleting ? "Deleting job..." : `Loading job details... (ID: ${jobId})`}
             </p>
           </div>
         </div>
@@ -256,8 +254,12 @@ const JobDetails = () => {
                   <button className="apply-button" onClick={handleEdit}>
                     <i className="fas fa-edit"></i> Edit 
                   </button>
-                  <button className="delete-button" onClick={handleDeleteClick}>
-                    <i className="fas fa-trash"></i> Delete
+                  <button 
+                    className="delete-button" 
+                    onClick={handleDeleteClick}
+                    disabled={isDeleting}
+                  >
+                    <i className="fas fa-trash"></i> {isDeleting ? "Deleting..." : "Delete"}
                   </button>
                   <p className="apply-note">Manage this Job Posting</p>
                 </>
