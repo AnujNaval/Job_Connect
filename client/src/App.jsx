@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 import AllJobs from "./components/jobseeker/AllJobs";
 import JobList from "./components/employer/JobList";
 import JobDetails from "./components/jobseeker/JobDetails";
+import JobPostForm from "./components/employer/JobPostForm";
 import "./styles/App.css"
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/jobs" element={<AllJobs />} />
         <Route path="/jobs/:jobId" element={<JobDetails />} />
         <Route path="/my-jobs" element={<JobList />} />
+        <Route path="/post-job" element={<JobPostForm />} />
         {/* Add other protected routes here */}
       </Route>
     </Routes>
