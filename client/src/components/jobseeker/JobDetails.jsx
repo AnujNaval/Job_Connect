@@ -50,7 +50,7 @@ const JobDetails = () => {
         navigate("/login");
         return;
     }
-    alert("Edit functionality would be implemented here");
+    navigate(`/edit-job/${jobId}`);
   };
 
   const handleDeleteClick = async () => {
