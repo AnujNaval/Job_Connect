@@ -107,9 +107,9 @@ function JobCard({ job, onViewDetails, onApply }) {
         )}
         {user?.role === "Employer" && (
           <>
-            <button className="apply-job-btn" onClick={() => onApply(job._id)}>
+            <Link className="apply-job-btn" to={`/edit-job/${job._id}`}>
               Edit Now
-            </button>
+            </Link>
           </>
         )}
       </div>
