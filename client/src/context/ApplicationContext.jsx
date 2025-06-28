@@ -1,7 +1,7 @@
-import { createContext, useContext, useReducer } from 'react';
-import applicationReducer from '../reducers/applicationReducer';
-import API from '../utils/api';
-import { useAuth } from './AuthContext';
+import { createContext, useContext, useReducer, useCallback } from "react";
+import applicationReducer from "../reducers/applicationReducer";
+import API from "../utils/api";
+import { useAuth } from "./AuthContext";
 
 const ApplicationContext = createContext();
 
@@ -18,23 +18,30 @@ export const ApplicationProvider = ({ children }) => {
 
   // Apply for a job (Job Seeker only)
   const applyForJob = async (jobId, applicationData) => {
-    if (!user || user.role !== 'Job Seeker') {
+    if (!user || user.role !== "Job Seeker") {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: 'Access denied. Job Seeker access required.',
+        type: "APPLICATION_ERROR",
+        payload: "Access denied. Job Seeker access required.",
       });
       return;
     }
 
-    dispatch({ type: 'APPLICATION_LOADING' });
+    dispatch({ type: "APPLICATION_LOADING" });
     try {
-      const response = await API.post(`/applications/${jobId}`, applicationData);
-      dispatch({ type: 'CREATE_APPLICATION', payload: response.data.application });
+      const response = await API.post(
+        `/applications/${jobId}`,
+        applicationData
+      );
+      dispatch({
+        type: "CREATE_APPLICATION",
+        payload: response.data.application,
+      });
       return response.data;
     } catch (error) {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: error.response?.data?.message || 'Failed to submit application',
+        type: "APPLICATION_ERROR",
+        payload:
+          error.response?.data?.message || "Failed to submit application",
       });
       throw error;
     }
@@ -42,67 +49,82 @@ export const ApplicationProvider = ({ children }) => {
 
   // Get all applications submitted by the logged-in user (Job Seeker only)
   const getUserApplications = async () => {
-    if (!user || user.role !== 'Job Seeker') {
+    if (!user || user.role !== "Job Seeker") {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: 'Access denied. Job Seeker access required.',
+        type: "APPLICATION_ERROR",
+        payload: "Access denied. Job Seeker access required.",
       });
       return;
     }
 
-    dispatch({ type: 'APPLICATION_LOADING' });
+    dispatch({ type: "APPLICATION_LOADING" });
     try {
-      const response = await API.get('/applications/user');
-      dispatch({ type: 'SET_USER_APPLICATIONS', payload: response.data.applications });
+      const response = await API.get("/applications/user");
+      dispatch({
+        type: "SET_USER_APPLICATIONS",
+        payload: response.data.applications,
+      });
     } catch (error) {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: error.response?.data?.message || 'Failed to fetch your applications',
+        type: "APPLICATION_ERROR",
+        payload:
+          error.response?.data?.message || "Failed to fetch your applications",
       });
     }
   };
 
   // Get all applications for a specific job (Employer only)
   const getJobApplications = async (jobId) => {
-    if (!user || user.role !== 'Employer') {
+    if (!user || user.role !== "Employer") {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: 'Access denied. Employer access required.',
+        type: "APPLICATION_ERROR",
+        payload: "Access denied. Employer access required.",
       });
       return;
     }
 
-    dispatch({ type: 'APPLICATION_LOADING' });
+    dispatch({ type: "APPLICATION_LOADING" });
     try {
       const response = await API.get(`/applications/job/${jobId}`);
-      dispatch({ type: 'SET_JOB_APPLICATIONS', payload: response.data.applications });
+      dispatch({
+        type: "SET_JOB_APPLICATIONS",
+        payload: response.data.applications,
+      });
     } catch (error) {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: error.response?.data?.message || 'Failed to fetch job applications',
+        type: "APPLICATION_ERROR",
+        payload:
+          error.response?.data?.message || "Failed to fetch job applications",
       });
     }
   };
 
   // Update application status (Employer only)
   const updateApplicationStatus = async (applicationId, status) => {
-    if (!user || user.role !== 'Employer') {
+    if (!user || user.role !== "Employer") {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: 'Access denied. Employer access required.',
+        type: "APPLICATION_ERROR",
+        payload: "Access denied. Employer access required.",
       });
       return;
     }
 
-    dispatch({ type: 'APPLICATION_LOADING' });
+    dispatch({ type: "APPLICATION_LOADING" });
     try {
-      const response = await API.put(`/applications/${applicationId}`, { status });
-      dispatch({ type: 'UPDATE_APPLICATION_STATUS', payload: response.data.application });
+      const response = await API.put(`/applications/${applicationId}`, {
+        status,
+      });
+      dispatch({
+        type: "UPDATE_APPLICATION_STATUS",
+        payload: response.data.application,
+      });
       return response.data;
     } catch (error) {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: error.response?.data?.message || 'Failed to update application status',
+        type: "APPLICATION_ERROR",
+        payload:
+          error.response?.data?.message ||
+          "Failed to update application status",
       });
       throw error;
     }
@@ -110,31 +132,32 @@ export const ApplicationProvider = ({ children }) => {
 
   // Withdraw application (Job Seeker only)
   const withdrawApplication = async (applicationId) => {
-    if (!user || user.role !== 'Job Seeker') {
+    if (!user || user.role !== "Job Seeker") {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: 'Access denied. Job Seeker access required.',
+        type: "APPLICATION_ERROR",
+        payload: "Access denied. Job Seeker access required.",
       });
       return;
     }
 
-    dispatch({ type: 'APPLICATION_LOADING' });
+    dispatch({ type: "APPLICATION_LOADING" });
     try {
       await API.delete(`/applications/${applicationId}`);
-      dispatch({ type: 'WITHDRAW_APPLICATION', payload: applicationId });
+      dispatch({ type: "WITHDRAW_APPLICATION", payload: applicationId });
     } catch (error) {
       dispatch({
-        type: 'APPLICATION_ERROR',
-        payload: error.response?.data?.message || 'Failed to withdraw application',
+        type: "APPLICATION_ERROR",
+        payload:
+          error.response?.data?.message || "Failed to withdraw application",
       });
       throw error;
     }
   };
 
   // Clear errors function
-  const clearError = () => {
-    dispatch({ type: 'CLEAR_ERROR' });
-  };
+  const clearError = useCallback(() => {
+    dispatch({ type: "CLEAR_ERROR" });
+  }, [dispatch]);
 
   return (
     <ApplicationContext.Provider
@@ -156,7 +179,9 @@ export const ApplicationProvider = ({ children }) => {
 export const useApplications = () => {
   const context = useContext(ApplicationContext);
   if (!context) {
-    throw new Error('useApplications must be used within an ApplicationProvider');
+    throw new Error(
+      "useApplications must be used within an ApplicationProvider"
+    );
   }
   return context;
 };

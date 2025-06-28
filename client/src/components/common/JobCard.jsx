@@ -100,9 +100,9 @@ function JobCard({ job, onViewDetails, onApply }) {
         </Link>
         {user?.role === "Job Seeker" && (
           <>
-            <button className="apply-job-btn" onClick={() => onApply(job._id)}>
+            <Link className="apply-job-btn" to={`/apply-for-job/${job._id}`}>
               Apply Now
-            </button>
+            </Link>
           </>
         )}
         {user?.role === "Employer" && (

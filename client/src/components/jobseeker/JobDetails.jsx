@@ -41,8 +41,8 @@ const JobDetails = () => {
       navigate("/login");
       return;
     }
-    // Handle job application logic
-    alert("Application functionality would be implemented here");
+
+    navigate(`/apply-for-job/${jobId}`);
   };
 
   const handleEdit = () => {
