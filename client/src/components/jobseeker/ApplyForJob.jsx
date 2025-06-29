@@ -204,7 +204,7 @@ const ApplyForJob = () => {
         setSubmitSuccess(true);
         setTimeout(() => {
           navigate("/applications");
-        }, 2000);
+        }, 500);
       }
     } catch (err) {
       console.error("Application submission error:", err);
