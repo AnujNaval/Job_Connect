@@ -1,15 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useJobs } from "../../context/JobContext";
 import { useAuth } from "../../context/AuthContext";
 import "../../styles/JobDetails.css";
+import { useApplications } from "../../context/ApplicationContext";
 
 const JobDetails = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
-  const { selectedJob, loading, error, fetchJobById, clearError, deleteJob } = useJobs();
+  const { selectedJob, loading, error, fetchJobById, clearError, deleteJob } =
+    useJobs();
+  const {
+    userApplications,
+    getUserApplications,
+    loading: applicationsLoading,
+    error: applicationsError,
+  } = useApplications();
   const { user } = useAuth();
-  
+
   // Add the missing state for deletion loading
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -36,6 +44,32 @@ const JobDetails = () => {
     };
   }, [jobId]);
 
+  useEffect(() => {
+    if (user?.role !== "Job Seeker") return;
+
+    const fetchData = async () => {
+      try {
+        console.log("Trying to get User's Applications");
+        await getUserApplications();
+        console.log(
+          "Successfully fetched user's applications",
+          userApplications
+        );
+      } catch (err) {
+        console.error("Failed to fetch applications:", err);
+      }
+    };
+
+    fetchData();
+  }, [getUserApplications, user?.role]);
+
+  const hasApplied = useMemo(() => {
+    return userApplications?.some(
+      (application) =>
+        application.job?._id === jobId || application.jobId === jobId
+    );
+  }, [userApplications, jobId]);
+
   const handleApply = () => {
     if (!user) {
       navigate("/login");
@@ -45,42 +79,50 @@ const JobDetails = () => {
     navigate(`/apply-for-job/${jobId}`);
   };
 
-  const handleEdit = () => {
+  const handleWithdraw = () => {
     if(!user) {
-        navigate("/login");
-        return;
+      navigate("/login");
+      return;
+    }
+    alert("Withdraw logic is to be implemented");
+  };
+
+  const handleEdit = () => {
+    if (!user) {
+      navigate("/login");
+      return;
     }
     navigate(`/edit-job/${jobId}`);
   };
 
   const handleDeleteClick = async () => {
     const confirmDelete = window.confirm(
-        `Are you sure you want to delete the job "${selectedJob.title}"?\n\nThis action cannot be undone.`
+      `Are you sure you want to delete the job "${selectedJob.title}"?\n\nThis action cannot be undone.`
     );
-    
+
     if (!confirmDelete) {
-        return;
+      return;
     }
 
     // Additional confirmation for extra safety
     const doubleConfirm = window.confirm(
-        "This will permanently delete the job posting. Are you absolutely sure?"
+      "This will permanently delete the job posting. Are you absolutely sure?"
     );
-    
+
     if (!doubleConfirm) {
-        return;
+      return;
     }
 
     setIsDeleting(true);
     try {
-        await deleteJob(jobId); // Make sure to await the deletion
-        alert("Job deleted successfully!");
-        navigate("/my-jobs");
+      await deleteJob(jobId); // Make sure to await the deletion
+      alert("Job deleted successfully!");
+      navigate("/my-jobs");
     } catch (error) {
-        console.error("Error deleting job:", error);
-        alert("Failed to delete job. Please try again.");
+      console.error("Error deleting job:", error);
+      alert("Failed to delete job. Please try again.");
     } finally {
-        setIsDeleting(false);
+      setIsDeleting(false);
     }
   };
 
@@ -122,7 +164,9 @@ const JobDetails = () => {
           <div className="job-loading-content">
             <div className="job-loading-spinner"></div>
             <p className="job-loading-text">
-              {isDeleting ? "Deleting job..." : `Loading job details... (ID: ${jobId})`}
+              {isDeleting
+                ? "Deleting job..."
+                : `Loading job details... (ID: ${jobId})`}
             </p>
           </div>
         </div>
@@ -241,25 +285,37 @@ const JobDetails = () => {
                 </h3>
                 <p className="salary-period">per year</p>
               </div>
-              {user?.role === "Job Seeker" && (
+              {user?.role === "Job Seeker" && !applicationsLoading && (
                 <>
-                  <button className="apply-button" onClick={handleApply}>
-                    <i className="fas fa-paper-plane"></i> Apply Now
-                  </button>
-                  <p className="apply-note">Apply with your profile</p>
+                  {!hasApplied ? (
+                    <>
+                      <button className="apply-button" onClick={handleApply}>
+                        <i className="fas fa-paper-plane"></i> Apply Now
+                      </button>
+                      <p className="apply-note">Apply with your profile</p>
+                    </>
+                  ) : (
+                    <>
+                      <button className="delete-button" onClick={handleWithdraw}>
+                        <i className="fas fa-trash"></i> Withdraw Application
+                      </button>
+                      <p className="apply-note"><i className="fas fa-check-circle"></i>Already Applied</p>
+                    </>
+                  )}
                 </>
               )}
               {user?.role === "Employer" && (
                 <>
                   <button className="apply-button" onClick={handleEdit}>
-                    <i className="fas fa-edit"></i> Edit 
+                    <i className="fas fa-edit"></i> Edit
                   </button>
-                  <button 
-                    className="delete-button" 
+                  <button
+                    className="delete-button"
                     onClick={handleDeleteClick}
                     disabled={isDeleting}
                   >
-                    <i className="fas fa-trash"></i> {isDeleting ? "Deleting..." : "Delete"}
+                    <i className="fas fa-trash"></i>{" "}
+                    {isDeleting ? "Deleting..." : "Delete"}
                   </button>
                   <p className="apply-note">Manage this Job Posting</p>
                 </>

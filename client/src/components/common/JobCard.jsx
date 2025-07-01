@@ -1,9 +1,47 @@
 import "./JobCard.css";
 import { useAuth } from "../../context/AuthContext";
+import { useApplications } from "../../context/ApplicationContext";
 import { Link } from "react-router-dom";
+import { useEffect, useMemo } from "react";
 
-function JobCard({ job, onViewDetails, onApply }) {
-  const {user} = useAuth();
+function JobCard({ job, onViewDetails, onApply, onWithdraw }) {
+  const { user } = useAuth();
+  const jobId = job._id;
+  const {
+    userApplications,
+    getUserApplications,
+    loading: applicationsLoading,
+  } = useApplications();
+
+  useEffect(() => {
+    if (user?.role !== "Job Seeker") return;
+    const fetchData = async () => {
+      try {
+        console.log("Trying to get User's Applications");
+        await getUserApplications();
+        console.log(
+          "Successfully fetched user's applications",
+          userApplications
+        );
+      } catch (err) {
+        console.error("Failed to fetch applications:", err);
+      }
+    };
+
+    fetchData();
+  }, [getUserApplications, user?.role]);
+
+  const hasApplied = useMemo(() => {
+    return userApplications?.some(
+      (application) =>
+        application.job?._id === jobId || application.jobId === jobId
+    );
+  }, [userApplications, jobId]);
+
+  const handleWithdrawApplication = async () => {
+    alert("Withdraw log is to be implemented");
+  };
+
   return (
     <div className="job-card">
       <div className="job-card-header">
@@ -59,7 +97,7 @@ function JobCard({ job, onViewDetails, onApply }) {
               {job.fixedSalary ? (
                 <>
                   <i className="fa fa-indian-rupee-sign"></i>{" "}
-                  {job.fixedSalary.toLocaleString("en-IN")}{" "}/ yr
+                  {job.fixedSalary.toLocaleString("en-IN")} / yr
                 </>
               ) : (
                 "Salary not disclosed"
@@ -100,9 +138,19 @@ function JobCard({ job, onViewDetails, onApply }) {
         </Link>
         {user?.role === "Job Seeker" && (
           <>
-            <Link className="apply-job-btn" to={`/apply-for-job/${job._id}`}>
-              Apply Now
-            </Link>
+            {hasApplied ? (
+              <button
+                className="withdraw-application-btn"
+                onClick={handleWithdrawApplication}
+                disabled={applicationsLoading}
+              >
+                {applicationsLoading ? "Processing..." : "Withdraw Application"}
+              </button>
+            ) : (
+              <Link className="apply-job-btn" to={`/apply-for-job/${job._id}`}>
+                Apply Now
+              </Link>
+            )}
           </>
         )}
         {user?.role === "Employer" && (

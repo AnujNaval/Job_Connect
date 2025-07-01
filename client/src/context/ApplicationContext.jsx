@@ -48,7 +48,7 @@ export const ApplicationProvider = ({ children }) => {
   };
 
   // Get all applications submitted by the logged-in user (Job Seeker only)
-  const getUserApplications = async () => {
+  const getUserApplications = useCallback(async () => {
     if (!user || user.role !== "Job Seeker") {
       dispatch({
         type: "APPLICATION_ERROR",
@@ -71,7 +71,7 @@ export const ApplicationProvider = ({ children }) => {
           error.response?.data?.message || "Failed to fetch your applications",
       });
     }
-  };
+  }, [dispatch, user]); // Add all dependencies here
 
   // Get all applications for a specific job (Employer only)
   const getJobApplications = async (jobId) => {
