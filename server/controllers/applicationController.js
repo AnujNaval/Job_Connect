@@ -105,7 +105,7 @@ const getUserApplications = async (req, res) => {
         const applications = await Application
         .find({ applicant: req.user.id })
         .sort({ createdAt: -1 }) // Optional, for latest-first ordering
-        .populate("job", "title company jobPostedOn");
+        .populate("job", "title companyName jobPostedOn city fixedSalary");
 
         console.log("Application fetched sucessfully", applications);
         res.status(200).json({message: "Applications fetched sucessfully", applications});

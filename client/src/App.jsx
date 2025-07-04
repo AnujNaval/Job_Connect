@@ -10,6 +10,7 @@ import JobDetails from "./components/jobseeker/JobDetails";
 import JobPostForm from "./components/employer/JobPostForm";
 import UpdateJob from "./components/employer/UpdateJob";
 import ApplyForJob from "./components/jobseeker/ApplyForJob";
+import MyApplications from "./components/jobseeker/MyApplications";
 import "./styles/App.css"
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         <Route path="/post-job" element={<JobPostForm />} />
         <Route path="/edit-job/:jobId" element={<UpdateJob />} />
         <Route path="/apply-for-job/:jobId" element={<ApplyForJob />} />
+        <Route path="/applications" element={<MyApplications />} />
         {/* Add other protected routes here */}
       </Route>
     </Routes>
