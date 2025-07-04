@@ -133,7 +133,7 @@ const JobDetails = () => {
   };
 
   const handleViewApplications = () => {
-    navigate(`/applications/${jobId}`);
+    navigate(`/applications/job/${jobId}`);
   };
 
   const formatSalary = (salary) => {

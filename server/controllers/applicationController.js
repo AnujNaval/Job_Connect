@@ -84,7 +84,8 @@ const getJobApplications = async (req, res) => {
         const applications = await Application
         .find({ job: jobId })
         .sort({ createdAt: -1 }) // newest first
-        .populate("applicant", "name email");
+        .populate("applicant", "name email")
+        .populate("job");
 
 
         // Send Response
