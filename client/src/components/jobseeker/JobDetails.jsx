@@ -132,6 +132,10 @@ const JobDetails = () => {
     }
   };
 
+  const handleViewApplications = () => {
+    navigate(`/applications/${jobId}`);
+  };
+
   const formatSalary = (salary) => {
     if (!salary) return "Salary not specified";
     return new Intl.NumberFormat("en-IN", {
@@ -378,6 +382,25 @@ const JobDetails = () => {
                 </li>
               </ul>
             </div>
+
+            {/* View Applications Card - Only show for Employers */}
+            {user?.role === "Employer" && (
+              <div className="content-card applications-management-card">
+                <h2 className="card-title">
+                  <i className="fas fa-users"></i> Applications Management
+                </h2>
+                <p className="applications-card-description">
+                  View and manage all applications received for this job posting.
+                </p>
+                <button
+                  className="view-applications-button"
+                  onClick={handleViewApplications}
+                >
+                  <i className="fas fa-eye"></i>
+                  View Received Applications
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Right Column - Sidebar */}

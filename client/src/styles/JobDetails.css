@@ -815,3 +815,67 @@
 .sidebar-card:nth-child(3) {
   animation-delay: 0.5s;
 }
+
+/* View Applications Card - Add this to your existing JobDetails.css */
+.applications-card-description {
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.view-applications-button {
+  width: 100%;
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.view-applications-button:hover {
+  background: linear-gradient(135deg, #047857 0%, #059669 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.4);
+}
+
+.view-applications-button:active {
+  transform: translateY(0);
+}
+
+.view-applications-button i {
+  font-size: 1.125rem;
+}
+
+/* Make main content area use flex for mobile reordering */
+@media (max-width: 1023px) {
+  .job-main-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .applications-management-card {
+    order: 10; /* High order value to ensure it comes last */
+  }
+}
+
+/* Responsive design for mobile */
+@media (max-width: 640px) {
+  .view-applications-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .view-applications-button i {
+    font-size: 1rem;
+  }
+}
