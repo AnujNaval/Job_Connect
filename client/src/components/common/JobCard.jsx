@@ -39,7 +39,17 @@ function JobCard({ job, onViewDetails, onApply, onWithdraw }) {
   }, [userApplications, jobId]);
 
   const handleWithdrawApplication = async () => {
-    alert("Withdraw log is to be implemented");
+    if (window.confirm("Are you sure you want to withdraw this application?")) {
+      setIsWithdrawing(true);
+      try {
+        await withdrawApplication(application._id);
+        alert("Application withdrawn successfully!");
+      } catch (error) {
+        alert(error.response?.data?.message || "Failed to withdraw application");
+      } finally {
+        setIsWithdrawing(false);
+      }
+    }
   };
 
   return (

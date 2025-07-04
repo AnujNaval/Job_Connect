@@ -79,12 +79,18 @@ const JobDetails = () => {
     navigate(`/apply-for-job/${jobId}`);
   };
 
-  const handleWithdraw = () => {
-    if(!user) {
-      navigate("/login");
-      return;
+  const handleWithdrawApplication = async () => {
+    if (window.confirm("Are you sure you want to withdraw this application?")) {
+      setIsWithdrawing(true);
+      try {
+        await withdrawApplication(application._id);
+        alert("Application withdrawn successfully!");
+      } catch (error) {
+        alert(error.response?.data?.message || "Failed to withdraw application");
+      } finally {
+        setIsWithdrawing(false);
+      }
     }
-    alert("Withdraw logic is to be implemented");
   };
 
   const handleEdit = () => {
@@ -296,7 +302,7 @@ const JobDetails = () => {
                     </>
                   ) : (
                     <>
-                      <button className="delete-button" onClick={handleWithdraw}>
+                      <button className="delete-button" onClick={handleWithdrawApplication}>
                         <i className="fas fa-trash"></i> Withdraw Application
                       </button>
                       <p className="apply-note"><i className="fas fa-check-circle"></i>Already Applied</p>
