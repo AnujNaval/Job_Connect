@@ -3,6 +3,7 @@ const {
     applyForJob,
     getJobApplications,
     getUserApplications,
+    getApplicationById,
     updateApplicationStatus,
     withdrawApplication,
 } = require("../controllers/applicationController");
@@ -15,6 +16,9 @@ router.get("/user", protect, getUserApplications);
 
 // Get all application for a given job
 router.get("/job/:jobId", protect, getJobApplications);
+
+// Get a specific application by ID
+router.get("/:applicationId", protect, getApplicationById); 
 
 // Apply for a job (Job Seeker)
 router.post("/:jobId", protect, applyForJob);

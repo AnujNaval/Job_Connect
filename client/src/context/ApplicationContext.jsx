@@ -8,6 +8,7 @@ const ApplicationContext = createContext();
 const initialState = {
   userApplications: [], // Applications submitted by the logged-in job seeker
   jobApplications: [], // Applications for a specific job (employer view)
+  selectedApplication: null, // Single application for detailed view
   loading: false,
   error: null,
 };
@@ -28,10 +29,7 @@ export const ApplicationProvider = ({ children }) => {
 
     dispatch({ type: "APPLICATION_LOADING" });
     try {
-      const response = await API.post(
-        `/applications/${jobId}`,
-        applicationData
-      );
+      const response = await API.post(`/applications/${jobId}`, applicationData);
       dispatch({
         type: "CREATE_APPLICATION",
         payload: response.data.application,
@@ -40,8 +38,7 @@ export const ApplicationProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: "APPLICATION_ERROR",
-        payload:
-          error.response?.data?.message || "Failed to submit application",
+        payload: error.response?.data?.message || "Failed to submit application",
       });
       throw error;
     }
@@ -67,11 +64,10 @@ export const ApplicationProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: "APPLICATION_ERROR",
-        payload:
-          error.response?.data?.message || "Failed to fetch your applications",
+        payload: error.response?.data?.message || "Failed to fetch your applications",
       });
     }
-  }, [dispatch, user]); // Add all dependencies here
+  }, [dispatch, user]);
 
   // Get all applications for a specific job (Employer only)
   const getJobApplications = async (jobId) => {
@@ -93,11 +89,29 @@ export const ApplicationProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: "APPLICATION_ERROR",
-        payload:
-          error.response?.data?.message || "Failed to fetch job applications",
+        payload: error.response?.data?.message || "Failed to fetch job applications",
       });
     }
   };
+
+  // Get a single application by ID (with proper authorization)
+  const getApplicationById = useCallback(async (applicationId) => {
+    dispatch({ type: "APPLICATION_LOADING" });
+    try {
+      const response = await API.get(`/applications/${applicationId}`);
+      dispatch({
+        type: "SET_SELECTED_APPLICATION",
+        payload: response.data.application,
+      });
+      return response.data.application;
+    } catch (error) {
+      dispatch({
+        type: "APPLICATION_ERROR",
+        payload: error.response?.data?.message || "Failed to fetch application",
+      });
+      throw error;
+    }
+  }, [dispatch]);
 
   // Update application status (Employer only)
   const updateApplicationStatus = async (applicationId, status) => {
@@ -111,9 +125,7 @@ export const ApplicationProvider = ({ children }) => {
 
     dispatch({ type: "APPLICATION_LOADING" });
     try {
-      const response = await API.put(`/applications/${applicationId}`, {
-        status,
-      });
+      const response = await API.put(`/applications/${applicationId}`, { status });
       dispatch({
         type: "UPDATE_APPLICATION_STATUS",
         payload: response.data.application,
@@ -122,9 +134,7 @@ export const ApplicationProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: "APPLICATION_ERROR",
-        payload:
-          error.response?.data?.message ||
-          "Failed to update application status",
+        payload: error.response?.data?.message || "Failed to update application status",
       });
       throw error;
     }
@@ -147,12 +157,16 @@ export const ApplicationProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: "APPLICATION_ERROR",
-        payload:
-          error.response?.data?.message || "Failed to withdraw application",
+        payload: error.response?.data?.message || "Failed to withdraw application",
       });
       throw error;
     }
   };
+
+  // Clear selected application
+  const clearSelectedApplication = useCallback(() => {
+    dispatch({ type: "CLEAR_SELECTED_APPLICATION" });
+  }, [dispatch]);
 
   // Clear errors function
   const clearError = useCallback(() => {
@@ -166,8 +180,10 @@ export const ApplicationProvider = ({ children }) => {
         applyForJob,
         getUserApplications,
         getJobApplications,
+        getApplicationById,
         updateApplicationStatus,
         withdrawApplication,
+        clearSelectedApplication,
         clearError,
       }}
     >
@@ -179,9 +195,7 @@ export const ApplicationProvider = ({ children }) => {
 export const useApplications = () => {
   const context = useContext(ApplicationContext);
   if (!context) {
-    throw new Error(
-      "useApplications must be used within an ApplicationProvider"
-    );
+    throw new Error("useApplications must be used within an ApplicationProvider");
   }
   return context;
 };

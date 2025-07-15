@@ -10,10 +10,28 @@ function applicationReducer(state, action) {
       return { ...state, error: null };
 
     case "SET_USER_APPLICATIONS":
-      return { ...state, userApplications: action.payload, loading: false, error: null };
+      return { 
+        ...state, 
+        userApplications: action.payload, 
+        loading: false, 
+        error: null 
+      };
 
     case "SET_JOB_APPLICATIONS":
-      return { ...state, jobApplications: action.payload, loading: false, error: null };
+      return { 
+        ...state, 
+        jobApplications: action.payload, 
+        loading: false, 
+        error: null 
+      };
+
+    case "SET_SELECTED_APPLICATION":
+      return {
+        ...state,
+        selectedApplication: action.payload,
+        loading: false,
+        error: null,
+      };
 
     case "CREATE_APPLICATION":
       return {
@@ -29,6 +47,13 @@ function applicationReducer(state, action) {
         jobApplications: state.jobApplications.map((application) =>
           application._id === action.payload._id ? action.payload : application
         ),
+        userApplications: state.userApplications.map((application) =>
+          application._id === action.payload._id ? action.payload : application
+        ),
+        selectedApplication: 
+          state.selectedApplication?._id === action.payload._id 
+            ? action.payload 
+            : state.selectedApplication,
         loading: false,
         error: null,
       };
@@ -39,8 +64,18 @@ function applicationReducer(state, action) {
         userApplications: state.userApplications.filter(
           (application) => application._id !== action.payload
         ),
+        selectedApplication: 
+          state.selectedApplication?._id === action.payload 
+            ? null 
+            : state.selectedApplication,
         loading: false,
         error: null,
+      };
+
+    case "CLEAR_SELECTED_APPLICATION":
+      return {
+        ...state,
+        selectedApplication: null,
       };
 
     default:

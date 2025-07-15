@@ -116,6 +116,51 @@ const getUserApplications = async (req, res) => {
     }
 };
 
+const getApplicationById = async (req, res) => {
+    try {
+        const applicationId = req.params.applicationId;
+        
+        // Find the application and populate both job and applicant details
+        const application = await Application.findById(applicationId)
+            .populate("job")
+            .populate("applicant", "name email");
+
+        if (!application) {
+            return res.status(404).json({ message: "Application not found" });
+        }
+
+        // Check authorization based on user role
+        if (req.user.role === "Employer") {
+            // For employers: check if they own the job
+            if (application.job.postedBy.toString() !== req.user.id) {
+                return res.status(403).json({ 
+                    message: "You are not authorized to view this application" 
+                });
+            }
+        } else if (req.user.role === "Job Seeker") {
+            // For job seekers: check if they are the applicant
+            if (application.applicant.toString() !== req.user.id) {
+                return res.status(403).json({ 
+                    message: "You are not authorized to view this application" 
+                });
+            }
+        } else {
+            return res.status(403).json({ 
+                message: "Unauthorized access" 
+            });
+        }
+
+        console.log(`Application ${applicationId} fetched successfully`);
+        res.status(200).json({ 
+            message: "Application fetched successfully", 
+            application 
+        });
+    } catch (error) {
+        console.log("Error fetching application", error);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
 const updateApplicationStatus = async (req, res) => {
     try {
         if (req.user.role !== "Employer") {
@@ -191,6 +236,7 @@ module.exports = {
     applyForJob,
     getJobApplications,
     getUserApplications,
+    getApplicationById,
     updateApplicationStatus,
     withdrawApplication,
 }

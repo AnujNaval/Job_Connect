@@ -12,6 +12,7 @@ import UpdateJob from "./components/employer/UpdateJob";
 import ApplyForJob from "./components/jobseeker/ApplyForJob";
 import MyApplications from "./components/jobseeker/MyApplications";
 import ApplicationsList from "./components/employer/ApplicationsList";
+import ApplicationDetails from "./components/employer/ApplicationDetails";
 import "./styles/App.css"
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
         <Route path="/apply-for-job/:jobId" element={<ApplyForJob />} />
         <Route path="/applications" element={<MyApplications />} />
         <Route path="/applications/job/:jobId" element={<ApplicationsList />} />
+        <Route path="/application-details/:applicationId" element={<ApplicationDetails />} />
         {/* Add other protected routes here */}
       </Route>
     </Routes>
